@@ -10,7 +10,7 @@
   "scripts": {
     "test": "node node/examples/smoke_test.js"
   },
-  "keywords": ["ley-21719", "gdpr", "chile", "pii", "llm", "privacy", "compliance", "messaging"],
+  "keywords": ["ley-21719", "proteccion-de-datos", "data-privacy", "gdpr", "pii", "pii-redaction", "anonymization", "llm", "llm-security", "ai", "compliance", "privacy", "chile", "dpo", "arcop", "messaging", "openai", "anthropic"],
   "repository": { "type": "git", "url": "https://github.com/Yugoxc/privacy-kit-cl.git" },
   "dependencies": {}
 }

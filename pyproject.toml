@@ -7,7 +7,7 @@ license = { text = "MIT" }
 authors = [{ name = "Diego Espinoza" }]
 requires-python = ">=3.10"
 dependencies = []            # core sin dependencias; YAML es opcional
-keywords = ["ley-21719", "gdpr", "chile", "pii", "llm", "privacy", "compliance", "messaging"]
+keywords = ["ley-21719", "proteccion-de-datos", "data-privacy", "gdpr", "pii", "pii-redaction", "anonymization", "llm", "llm-security", "ai", "compliance", "privacy", "chile", "dpo", "arcop", "messaging"]
 
 [project.optional-dependencies]
 yaml = ["pyyaml"]
