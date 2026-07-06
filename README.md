@@ -10,7 +10,9 @@
 
 <p align="center"><i>La PII (RUT, teléfono) se enmascara <b>antes</b> de tocar el LLM, y se rehidrata solo en la respuesta al cliente.</i></p>
 
-Módulo **independiente y reutilizable** para cumplir la **Ley 21.719** (Protección de Datos Personales de Chile) en cualquier sistema que trate datos personales — especialmente sistemas con **IA/LLMs** que interactúan con terceros (clientes).
+Módulo **independiente y reutilizable** para cumplir la **Ley 21.719** (Protección de Datos Personales de Chile) en cualquier sistema que trate datos personales — especialmente sistemas con **IA/LLMs** que interactúan con clientes por **cualquier canal de mensajería** (WhatsApp, SMS, Telegram, web chat, email…).
+
+**Disponible en Python y Node.js**, con la misma API.
 
 La idea: en vez de reimplementar el cumplimiento en cada proyecto, se **acopla** este kit como una capa transversal. Un desarrollador (o una IA) instala el paquete, lo configura con un archivo declarativo, y envuelve los puntos donde entra/sale/procesa un dato personal.
 
@@ -37,7 +39,16 @@ La idea: en vez de reimplementar el cumplimiento en cada proyecto, se **acopla**
 3. **Acoplable por envoltura:** envuelves las llamadas sensibles (`@guard`, `redact(...)`, `audit(...)`) sin reescribir tu lógica.
 4. **AI-friendly:** el archivo [`AGENTS.md`](AGENTS.md) le dice a una IA exactamente cómo integrar el kit en un sistema nuevo o existente.
 
-## Quickstart
+## Implementaciones
+
+| Lenguaje | Ubicación | Prueba |
+|---|---|---|
+| **Python** | [`privacy_kit/`](privacy_kit/) | `python examples/smoke_test.py` |
+| **Node.js** | [`node/`](node/) | `cd node && npm test` |
+
+Ambas exponen la misma API (`redaction`, `consent`, `rights`, `transfers`, `audit`, `retention`, `notice`) y son **agnósticas del canal** de mensajería.
+
+## Quickstart (Python)
 
 ```bash
 pip install -e .

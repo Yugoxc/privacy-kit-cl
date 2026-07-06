@@ -9,7 +9,7 @@ class NoticeBuilder:
     def __init__(self, config: PrivacyConfig):
         self.config = config
 
-    def render(self, canal: str = "whatsapp") -> str:
+    def render(self, canal: str = "mensajeria") -> str:
         r = self.config.raw.get("responsable", {})
         finalidades = ", ".join(self.config.raw.get("purposes", {}).keys())
         return (
