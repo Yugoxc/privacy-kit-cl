@@ -1,0 +1,16 @@
+[project]
+name = "privacy-kit-cl"
+version = "0.1.0"
+description = "Capa modular y reutilizable de cumplimiento Ley 21.719 (Chile) para sistemas con IA"
+requires-python = ">=3.10"
+dependencies = []            # core sin dependencias; YAML es opcional
+
+[project.optional-dependencies]
+yaml = ["pyyaml"]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["privacy_kit*"]
