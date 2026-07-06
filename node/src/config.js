@@ -9,17 +9,25 @@ const DEFAULT_CONFIG = {
     identificacion: ['rut', 'nombre'],
     contacto: ['telefono', 'email', 'direccion'],
     ubicacion: ['lat', 'lng', 'comuna'],
-    transaccional: ['historial_compra', 'monto'],
+    transaccional: ['historial_compra', 'monto', 'deuda'],
+    laboral: ['cargo', 'cv', 'pretension_renta'],
     sensible: [],
   },
-  // Finalidades y su base de licitud.
+  // Finalidades y su base de licitud. Son EJEMPLOS multi-rubro: cambia/agrega las tuyas.
+  // Bases: consentimiento | contrato | interes_legitimo | ley.
   purposes: {
-    asistencia_venta: { legalBasis: 'interes_legitimo' },
-    despacho: { legalBasis: 'contrato' },
-    marketing: { legalBasis: 'consentimiento' },
+    asistencia_venta: { legalBasis: 'interes_legitimo' },   // bot/agente de ventas
+    soporte: { legalBasis: 'interes_legitimo' },             // atención al cliente / post-venta
+    agendamiento: { legalBasis: 'contrato' },                // reserva de horas / citas
+    despacho: { legalBasis: 'contrato' },                    // entrega de pedidos
+    cobranza: { legalBasis: 'contrato' },                    // gestión de pagos / deuda
+    reclutamiento: { legalBasis: 'consentimiento' },         // postulantes / CVs
+    verificacion_identidad: { legalBasis: 'ley' },           // KYC / obligación legal
+    notificaciones: { legalBasis: 'interes_legitimo' },      // avisos transaccionales
+    marketing: { legalBasis: 'consentimiento' },             // comunicaciones comerciales
   },
   // Plazos de retención por categoría (días). 0 = no almacenar.
-  retentionDays: { identificacion: 730, contacto: 730, ubicacion: 30, transaccional: 1825, sensible: 0 },
+  retentionDays: { identificacion: 730, contacto: 730, ubicacion: 30, transaccional: 1825, laboral: 365, sensible: 0 },
   // Terceros a los que se transfieren datos.
   thirdParties: {
     anthropic: { pais: 'US', rol: 'encargado', base: 'interes_legitimo' },

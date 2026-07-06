@@ -15,14 +15,22 @@ DEFAULT_CONFIG: dict[str, Any] = {
         "identificacion": ["rut", "nombre"],
         "contacto": ["telefono", "email", "direccion"],
         "ubicacion": ["lat", "lng", "comuna"],
-        "transaccional": ["historial_compra", "monto"],
-        "sensible": [],  # salud, ideología, etc. — evitar; si hay, base legal reforzada
+        "transaccional": ["historial_compra", "monto", "deuda"],
+        "laboral": ["cargo", "cv", "pretension_renta"],
+        "sensible": [],  # salud, ideología, etc. — base legal reforzada; evitar si no es imprescindible
     },
-    # Finalidades declaradas y su base de licitud.
+    # Finalidades declaradas y su base de licitud. Son EJEMPLOS multi-rubro:
+    # cambia/agrega las tuyas. Bases: consentimiento | contrato | interes_legitimo | ley.
     "purposes": {
-        "asistencia_venta": {"legal_basis": "interes_legitimo"},
-        "despacho": {"legal_basis": "contrato"},
-        "marketing": {"legal_basis": "consentimiento"},
+        "asistencia_venta": {"legal_basis": "interes_legitimo"},   # bot/agente de ventas
+        "soporte": {"legal_basis": "interes_legitimo"},            # atención al cliente / post-venta
+        "agendamiento": {"legal_basis": "contrato"},               # reserva de horas / citas
+        "despacho": {"legal_basis": "contrato"},                   # entrega de pedidos
+        "cobranza": {"legal_basis": "contrato"},                   # gestión de pagos / deuda
+        "reclutamiento": {"legal_basis": "consentimiento"},        # postulantes / CVs
+        "verificacion_identidad": {"legal_basis": "ley"},          # KYC / obligación legal
+        "notificaciones": {"legal_basis": "interes_legitimo"},     # avisos transaccionales
+        "marketing": {"legal_basis": "consentimiento"},            # comunicaciones comerciales
     },
     # Plazos de retención por categoría (días). 0 = no almacenar.
     "retention_days": {
@@ -30,6 +38,7 @@ DEFAULT_CONFIG: dict[str, Any] = {
         "contacto": 730,
         "ubicacion": 30,
         "transaccional": 1825,
+        "laboral": 365,
         "sensible": 0,
     },
     # Terceros a los que se transfieren datos (clave para el registro de transferencias).

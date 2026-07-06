@@ -98,6 +98,15 @@ const respuesta = pk.redaction.rehydrate(await llm(red.text), red.tokenMap);
 
 Ejemplos completos multi-canal: [`python/examples/messaging_integration.py`](python/examples/messaging_integration.py) · [`node/examples/messaging_integration.js`](node/examples/messaging_integration.js).
 
+## Casos de uso
+
+Aplica a **cualquier sistema que trate datos personales** (RUT, nombre, teléfono, email, dirección…), tenga IA o no. Las finalidades del config son ejemplos multi-rubro (`asistencia_venta`, `soporte`, `agendamiento`, `cobranza`, `reclutamiento`, `verificacion_identidad`, `notificaciones`, `marketing`…): cámbialas por las tuyas.
+
+- **Con IA / chat** (bots y agentes con LLM): el foco es `redaction` — enmascarar la PII antes de enviarla al modelo, más el registro de transferencia. → ejemplo `messaging_integration`.
+- **Sin IA** (formularios web, APIs de registro, CRM, RRHH, cobranza): se usan `consent`, `retention`, `audit` y `rights` (ARCOP), **sin** `redaction`. → ejemplo `web_form_integration`.
+
+Ejemplos completos: [`python/examples/`](python/examples/) · [`node/examples/`](node/examples/).
+
 ## Estado
 
 Scaffold base (esqueleto funcional con interfaces y stubs). Diseñado para crecer proyecto a proyecto. No es asesoría legal — validar con abogado antes de producción.
