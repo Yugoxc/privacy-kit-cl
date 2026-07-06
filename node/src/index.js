@@ -29,6 +29,9 @@ class PrivacyKit {
 
   exportRopa() { return buildRopa(this.config); }
 
+  /** Busca subject_id(s) a partir de un dato textual (RUT/email/…) vía el resolver registrado. */
+  resolve(query) { return this.rights.resolve(query); }
+
   /** Reporte agregado de TODO lo que el kit tiene de un titular (para atender "acceso"). */
   subjectReport(subjectId) {
     return {

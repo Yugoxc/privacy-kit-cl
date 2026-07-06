@@ -48,7 +48,15 @@ function html() {
  </div>
 
  <div class="card">
-   <h2>Buscar titular</h2>
+   <h2>Buscar por dato (RUT / email / teléfono)</h2>
+   <div class="row">
+     <input id="q" class="grow mono" placeholder="ej. 11.111.111-1 o cliente@correo.cl">
+     <button onclick="buscarDato()">Buscar</button>
+   </div>
+   <div id="cands" class="muted" style="margin-top:8px">Requiere un resolver registrado (register_resolver) que mapee el dato al subject_id.</div>
+ </div>
+ <div class="card">
+   <h2>Buscar por subject_id</h2>
    <div class="row">
      <input id="sid" class="grow mono" placeholder="subject_id (ej. hash del RUT)">
      <button onclick="buscar()">Buscar</button>
@@ -68,6 +76,14 @@ function toast(m,ok=true){const t=$('#toast');t.style.borderLeftColor=ok?'#3fb95
 async function api(path,opts={}){opts.headers=Object.assign({'Content-Type':'application/json','Authorization':'Bearer '+TOKEN},opts.headers||{});const r=await fetch(path,opts);if(r.status===401){toast('Token inválido o faltante',false);throw new Error('401');}return r.json();}
 function tbl(rows){if(!rows||!rows.length)return '<div class="muted">— sin registros —</div>';const cols=[...new Set(rows.flatMap(r=>Object.keys(r)))];let h='<table><tr>'+cols.map(c=>'<th>'+c+'</th>').join('')+'</tr>';for(const row of rows){h+='<tr>'+cols.map(c=>'<td class="mono">'+fmt(row[c])+'</td>').join('')+'</tr>';}return h+'</table>';}
 function fmt(v){if(v==null)return '';if(typeof v==='object')return JSON.stringify(v);return String(v);}
+async function buscarDato(){
+  const q=$('#q').value.trim();if(!q){toast('Ingresa un dato',false);return;}
+  let d;try{d=await api('/api/resolve?q='+encodeURIComponent(q));}catch(e){return;}
+  if(!d.supported){$('#cands').innerHTML='<span style="color:#ff7b72">No hay resolver configurado. Registra uno con register_resolver(fn) para buscar por RUT/email/teléfono.</span>';return;}
+  if(!d.results.length){$('#cands').textContent='Sin coincidencias.';return;}
+  $('#cands').innerHTML='Coincidencias: '+d.results.map(id=>'<button class="ghost" style="margin:3px" onclick="pick(\\''+id+'\\')">'+id+'</button>').join('');
+}
+function pick(id){$('#sid').value=id;buscar();}
 async function buscar(){
   const id=$('#sid').value.trim();if(!id){toast('Ingresa un subject_id',false);return;}
   let d;try{d=await api('/api/subject?id='+encodeURIComponent(id));}catch(e){return;}
@@ -119,6 +135,10 @@ function serveAdmin(pk, opts = {}) {
       try {
         if (req.method === 'GET' && u.pathname === '/api/health') return send(res, 200, { ok: true });
         if (req.method === 'GET' && u.pathname === '/api/ropa') return send(res, 200, { ropa: pk.exportRopa() });
+        if (req.method === 'GET' && u.pathname === '/api/resolve') {
+          const results = pk.resolve(u.searchParams.get('q') || '');
+          return send(res, 200, { supported: results !== null, results: results || [] });
+        }
         if (req.method === 'GET' && u.pathname === '/api/subject') {
           const id = u.searchParams.get('id') || '';
           return send(res, 200, pk.subjectReport(id));

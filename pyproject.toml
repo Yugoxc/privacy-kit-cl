@@ -1,6 +1,6 @@
 [project]
 name = "privacy-kit-cl"
-version = "0.2.0"
+version = "0.3.0"
 description = "Capa modular y reutilizable de cumplimiento Ley 21.719 (Chile) para sistemas con IA, multi-canal de mensajería"
 readme = "README.md"
 license = { text = "MIT" }

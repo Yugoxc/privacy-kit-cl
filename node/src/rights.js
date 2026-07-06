@@ -4,12 +4,23 @@
 class RightsManager {
   constructor(store, config, audit) {
     this.store = store; this.config = config; this.audit = audit;
-    this._sources = {}; // name -> { fetch, del, rectify }
+    this._sources = {};  // name -> { fetch, del, rectify }
+    this._resolver = null;
   }
 
   // del/rectify opcionales. (se usa `del` porque `delete` es palabra reservada)
   registerSource(name, { fetch, del = null, rectify = null }) {
     this._sources[name] = { fetch, del, rectify };
+  }
+
+  // Resolver opcional: mapea un dato textual (RUT/email/teléfono/nombre) a subject_id(s).
+  // Lo implementa tu integración (sabe cómo genera el subject_id). fn(query) -> string[]
+  registerResolver(fn) { this._resolver = fn; }
+
+  resolve(query) {
+    if (!this._resolver) return null;              // null => no configurado
+    const r = this._resolver(query);
+    return (Array.isArray(r) ? r : [r]).filter(Boolean).map(String);
   }
 
   access(subjectId) {

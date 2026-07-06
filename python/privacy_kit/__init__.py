@@ -12,7 +12,7 @@ from .transfers import TransferRegistry
 from .notice import NoticeBuilder
 from .store.base import PrivacyStore, InMemoryStore
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 
 @dataclass
@@ -49,6 +49,10 @@ class PrivacyKit:
         """Genera el Registro de Actividades de Tratamiento (ROPA) a partir del config."""
         from .ropa import build_ropa
         return build_ropa(self.config)
+
+    def resolve(self, query: str):
+        """Busca subject_id(s) a partir de un dato textual vía el resolver registrado."""
+        return self.rights.resolve(query)
 
     def subject_report(self, subject_id: str) -> dict:
         """Reporte agregado de TODO lo que el kit tiene de un titular (derecho de acceso)."""

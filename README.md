@@ -118,10 +118,19 @@ pk.serve_admin()
 
 | Método | Ruta | Qué hace |
 |---|---|---|
+| GET | `/api/resolve?q=<dato>` | Busca `subject_id`(s) por **RUT/email/teléfono** (requiere resolver registrado). |
 | GET | `/api/subject?id=<id>` | Todo lo del titular: consentimientos, transferencias, datos en fuentes y auditoría. |
 | POST | `/api/subject/forget` `{id}` | **Derecho al olvido**: borra todos sus datos (la auditoría se conserva como evidencia). |
 | GET | `/api/ropa` | Registro de Actividades de Tratamiento. |
 | GET | `/api/health` | Estado. |
+
+**Buscar por dato (RUT/email):** como el `subject_id` es un id interno (idealmente un hash), tu integración registra un *resolver* que sabe mapear el dato real al id:
+```js
+pk.rights.registerResolver(rut => db.usuarios.find({ rut }).map(u => u.subjectId)); // node
+```
+```python
+pk.rights.register_resolver(lambda rut: [u["subject_id"] for u in db.find("usuarios", {"rut": rut})])  # python
+```
 
 ⚠️ Superficie sensible: exponla **solo en red interna/VPN** y siempre con token. Cada acción queda auditada.
 

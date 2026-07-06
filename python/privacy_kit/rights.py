@@ -19,11 +19,25 @@ class RightsManager:
         self.audit = audit
         # fuentes de datos personales del sistema: nombre -> (buscar, borrar, rectificar)
         self._sources: dict[str, dict[str, Callable]] = {}
+        self._resolver: Callable[[str], list] | None = None
 
     def register_source(self, name: str, *, fetch: Callable[[str], list],
                         delete: Callable[[str], int] | None = None,
                         rectify: Callable[[str, dict], int] | None = None) -> None:
         self._sources[name] = {"fetch": fetch, "delete": delete, "rectify": rectify}
+
+    def register_resolver(self, fn: Callable[[str], list]) -> None:
+        """Resolver opcional: mapea un dato textual (RUT/email/…) a subject_id(s).
+        Lo implementa tu integración (sabe cómo genera el subject_id)."""
+        self._resolver = fn
+
+    def resolve(self, query: str):
+        if self._resolver is None:
+            return None  # no configurado
+        r = self._resolver(query)
+        if not isinstance(r, (list, tuple)):
+            r = [r]
+        return [str(x) for x in r if x]
 
     # --- Acceso + Portabilidad ---
     def access(self, subject_id: str) -> dict[str, list]:
