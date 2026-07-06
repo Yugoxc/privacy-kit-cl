@@ -2,7 +2,7 @@
 
 > Cumplimiento de la **Ley 21.719** (protección de datos, Chile) para sistemas con **IA/LLMs** — sin reescribir lo que ya funciona.
 
-![Python](https://img.shields.io/badge/python-3.10+-blue) ![License](https://img.shields.io/badge/license-MIT-green) ![status](https://img.shields.io/badge/status-alpha-orange)
+[![npm](https://img.shields.io/npm/v/privacy-kit-cl)](https://www.npmjs.com/package/privacy-kit-cl) ![Python](https://img.shields.io/badge/python-3.10+-blue) ![License](https://img.shields.io/badge/license-MIT-green) ![status](https://img.shields.io/badge/status-alpha-orange)
 
 <p align="center">
   <img src="docs/demo.gif" alt="La PII se enmascara antes de llegar al LLM y se rehidrata solo en la respuesta al cliente" width="760">
@@ -60,8 +60,7 @@ pip install "git+https://github.com/Yugoxc/privacy-kit-cl.git"
 
 **Node.js** (npm):
 ```bash
-npm install github:Yugoxc/privacy-kit-cl
-# en local, desde el repo:  npm install
+npm install privacy-kit-cl
 ```
 
 ## Uso

@@ -4,7 +4,7 @@ Implementación **Node.js** de `privacy-kit-cl` — misma API y mismos component
 
 ## Instalar
 ```bash
-npm install github:Yugoxc/privacy-kit-cl
+npm install privacy-kit-cl
 ```
 
 ## Uso
