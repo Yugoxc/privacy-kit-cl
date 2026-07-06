@@ -1,16 +1,25 @@
 [project]
 name = "privacy-kit-cl"
 version = "0.1.0"
-description = "Capa modular y reutilizable de cumplimiento Ley 21.719 (Chile) para sistemas con IA"
+description = "Capa modular y reutilizable de cumplimiento Ley 21.719 (Chile) para sistemas con IA, multi-canal de mensajería"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Diego Espinoza" }]
 requires-python = ">=3.10"
 dependencies = []            # core sin dependencias; YAML es opcional
+keywords = ["ley-21719", "gdpr", "chile", "pii", "llm", "privacy", "compliance", "messaging"]
 
 [project.optional-dependencies]
 yaml = ["pyyaml"]
+
+[project.urls]
+Homepage = "https://github.com/Yugoxc/privacy-kit-cl"
 
 [build-system]
 requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
+# El código Python vive en python/ (el repo también contiene la versión Node en node/)
 [tool.setuptools.packages.find]
+where = ["python"]
 include = ["privacy_kit*"]

@@ -34,42 +34,69 @@ La idea: en vez de reimplementar el cumplimiento en cada proyecto, se **acopla**
 
 ## Principios de diseño
 
-1. **Independiente:** no depende de tu framework. Core en Python puro + interfaces de almacenamiento (`store/base.py`) que adaptas a Mongo, ClickHouse, Postgres, etc.
-2. **Declarativo:** todo el comportamiento sale de un `privacy.config.yaml` (categorías de datos, finalidades, plazos, terceros). Cambiar la política = cambiar config, no código.
-3. **Acoplable por envoltura:** envuelves las llamadas sensibles (`@guard`, `redact(...)`, `audit(...)`) sin reescribir tu lógica.
+1. **Independiente:** no depende de tu framework. Core sin dependencias externas + una interfaz de almacenamiento (`store`) que adaptas a Mongo, ClickHouse, Postgres, etc.
+2. **Declarativo:** todo el comportamiento sale de un archivo de configuración (categorías de datos, finalidades, plazos, terceros). Cambiar la política = cambiar config, no código.
+3. **Acoplable por envoltura:** envuelves las llamadas sensibles (`redact(...)`, `transfers.log(...)`, `audit.record(...)`) sin reescribir tu lógica.
 4. **AI-friendly:** el archivo [`AGENTS.md`](AGENTS.md) le dice a una IA exactamente cómo integrar el kit en un sistema nuevo o existente.
 
 ## Implementaciones
 
-| Lenguaje | Ubicación | Prueba |
-|---|---|---|
-| **Python** | [`privacy_kit/`](privacy_kit/) | `python examples/smoke_test.py` |
-| **Node.js** | [`node/`](node/) | `cd node && npm test` |
+El repo contiene **dos paquetes independientes**, uno por lenguaje, con la misma API. Instala solo el que necesites.
 
-Ambas exponen la misma API (`redaction`, `consent`, `rights`, `transfers`, `audit`, `retention`, `notice`) y son **agnósticas del canal** de mensajería.
+| Lenguaje | Código | Manifiesto | Prueba |
+|---|---|---|---|
+| **Python** | [`python/privacy_kit/`](python/privacy_kit/) | `pyproject.toml` | `python python/examples/smoke_test.py` |
+| **Node.js** | [`node/src/`](node/src/) | `package.json` | `npm test` |
 
-## Quickstart (Python)
+Ambos exponen los mismos componentes (`redaction`, `consent`, `rights`, `transfers`, `audit`, `retention`, `notice`, `store`) y son **agnósticos del canal** de mensajería.
 
+## Instalación
+
+**Python** (pip):
 ```bash
-pip install -e .
+pip install "git+https://github.com/Yugoxc/privacy-kit-cl.git"
+# en local, desde el repo:  pip install .
 ```
 
+**Node.js** (npm):
+```bash
+npm install github:Yugoxc/privacy-kit-cl
+# en local, desde el repo:  npm install
+```
+
+## Uso
+
+**Python**
 ```python
 from privacy_kit import PrivacyKit
 
-pk = PrivacyKit.from_config("privacy.config.yaml")
+pk = PrivacyKit.from_config("privacy.config.yaml")   # sin archivo, usa DEFAULT_CONFIG
 
-# 1) Antes de mandar texto de un cliente a un LLM:
-safe_text, tokens = pk.redaction.redact(user_message, subject_id=rut)
+# 1) Antes de mandar texto de un cliente a un LLM (cualquier canal):
+red = pk.redaction.redact(user_message, subject_id=rut)   # -> RedactionResult(text, token_map, found)
+pk.transfers.log(subject_id=rut, destino="anthropic", finalidad="asistencia_venta",
+                 categorias=list(red.found.keys()))
 
-# 2) Registrar la transferencia al proveedor del modelo:
-pk.transfers.log(subject_id=rut, destino="anthropic", finalidad="asistencia_venta")
+# 2) Enviar SOLO red.text al LLM; luego rehidratar la respuesta al cliente:
+respuesta = pk.redaction.rehydrate(llm(red.text), red.token_map)
 
-# 3) Auditar el acceso:
-pk.audit.record(subject_id=rut, accion="procesar_mensaje", sistema="mcp_ecommerce")
+# 3) Auditar el tratamiento:
+pk.audit.record(subject_id=rut, accion="procesar_mensaje", sistema="bot:whatsapp")
 ```
 
-Ver [`examples/mcp_integration.py`](examples/mcp_integration.py) para el caso real del bot de WhatsApp.
+**Node.js**
+```js
+const { PrivacyKit } = require("privacy-kit-cl");
+
+const pk = PrivacyKit.fromConfig("privacy.config.json"); // o .fromObject({...})
+
+const red = pk.redaction.redact(userMessage, subjectId); // -> { text, tokenMap, found }
+pk.transfers.log(subjectId, "anthropic", "asistencia_venta", Object.keys(red.found));
+
+const respuesta = pk.redaction.rehydrate(await llm(red.text), red.tokenMap);
+```
+
+Ejemplos completos multi-canal: [`python/examples/messaging_integration.py`](python/examples/messaging_integration.py) · [`node/examples/messaging_integration.js`](node/examples/messaging_integration.js).
 
 ## Estado
 

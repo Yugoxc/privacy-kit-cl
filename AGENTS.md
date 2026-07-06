@@ -11,8 +11,10 @@ Envolver todos los puntos donde el sistema **recibe, procesa, almacena o transfi
 3. Localiza dónde SALEN a terceros: llamadas a LLMs (OpenAI/Anthropic), pasarelas de pago, APIs externas, logs.
 
 ## Paso 1 — Instalar y configurar
-1. `pip install -e /ruta/privacy-kit-cl` (o copia `privacy_kit/` al proyecto).
-2. Crea `privacy.config.yaml` en la raíz del proyecto a partir de `privacy_kit/config.py::DEFAULT_CONFIG`. Rellena:
+1. Instala el paquete del lenguaje del sistema:
+   - Python: `pip install "git+https://github.com/Yugoxc/privacy-kit-cl.git"` (código en `python/privacy_kit/`).
+   - Node.js: `npm install github:Yugoxc/privacy-kit-cl` (código en `node/src/`).
+2. Crea el archivo de configuración a partir de `DEFAULT_CONFIG` (`python/privacy_kit/config.py` o `node/src/config.js`). Rellena:
    - `data_categories`: qué datos personales trata este sistema.
    - `purposes`: finalidades (ej. "asistencia_venta", "despacho").
    - `retention_days`: plazo por categoría.
@@ -20,7 +22,7 @@ Envolver todos los puntos donde el sistema **recibe, procesa, almacena o transfi
    - `legal_basis`: base de licitud por finalidad (consentimiento | interés_legítimo | contrato).
 
 ## Paso 2 — Implementar el `Store`
-Elige el adaptador de almacenamiento: implementa `privacy_kit/store/base.py::PrivacyStore` sobre la BD existente del sistema (Mongo, ClickHouse, Postgres). Solo 6 métodos. Si no hay BD, usa `InMemoryStore` para prototipar.
+Elige el adaptador de almacenamiento: implementa la interfaz `PrivacyStore` (`python/privacy_kit/store/base.py` o `node/src/store/base.js`) sobre la BD existente del sistema (Mongo, ClickHouse, Postgres). Solo 6 métodos. Si no hay BD, usa `InMemoryStore` para prototipar.
 
 ## Paso 3 — Envolver los 5 puntos de control (en este orden de prioridad)
 1. **Minimización antes de LLM/terceros** — CRÍTICO: envuelve TODA llamada a un LLM/API externa con `pk.redaction.redact(texto, subject_id)` para quitar PII. Registra la transferencia con `pk.transfers.log(...)`.

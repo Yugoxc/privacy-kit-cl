@@ -4,13 +4,12 @@ Implementación **Node.js** de `privacy-kit-cl` — misma API y mismos component
 
 ## Instalar
 ```bash
-# dentro de tu proyecto Node (sin dependencias externas)
-cp -r node/src ./privacy-kit   # o usar como paquete local
+npm install github:Yugoxc/privacy-kit-cl
 ```
 
 ## Uso
 ```js
-const { PrivacyKit } = require('./privacy-kit');
+const { PrivacyKit } = require('privacy-kit-cl');
 const pk = PrivacyKit.fromConfig('privacy.config.json'); // o .fromObject({...})
 
 // 1) Antes de mandar texto de un cliente a un LLM (cualquier canal):
