@@ -28,6 +28,10 @@ class PrivacyStore(ABC):
     def expired(self, collection: str, before_iso: str) -> list[dict[str, Any]]:
         """Registros cuya retención venció (para el barrido de borrado)."""
 
+    def read_log(self, query: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+        """Opcional (panel admin): leer la bitácora. Default vacío para no romper stores existentes."""
+        return []
+
 
 class InMemoryStore(PrivacyStore):
     """Implementación de prueba/prototipo. NO usar en producción."""
@@ -63,3 +67,7 @@ class InMemoryStore(PrivacyStore):
     def expired(self, collection, before_iso):
         return [r for r in self._db.get(collection, [])
                 if r.get("expires_at") and r["expires_at"] < before_iso]
+
+    def read_log(self, query=None):
+        query = query or {}
+        return [r for r in self._log if all(r.get(k) == v for k, v in query.items())]

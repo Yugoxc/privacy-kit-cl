@@ -97,6 +97,34 @@ const respuesta = pk.redaction.rehydrate(await llm(red.text), red.tokenMap);
 
 Ejemplos completos multi-canal: [`python/examples/messaging_integration.py`](python/examples/messaging_integration.py) · [`node/examples/messaging_integration.js`](node/examples/messaging_integration.js).
 
+## Panel de administración (opcional)
+
+Módulo `admin` opcional: levanta un mini-servidor (sin dependencias) con **API REST + UI** para gestionar los datos que el kit registra —consentimientos, transferencias, auditoría, ROPA— y ejecutar el **derecho al olvido** (borrar todos los datos de un titular). Se activa por config; si está apagado, **no levanta nada**.
+
+<p align="center"><img src="docs/admin-subject.png" width="720" alt="Panel de administración de privacy-kit"></p>
+
+**Activar:**
+```js
+// Node
+const pk = PrivacyKit.fromObject({ adminUi: { enabled: true, port: 8787, token: "un-token-secreto" } });
+pk.serveAdmin();
+```
+```python
+# Python (con admin_ui.enabled: true en el config)
+pk.serve_admin()
+```
+
+**API REST** (requiere header `Authorization: Bearer <token>`):
+
+| Método | Ruta | Qué hace |
+|---|---|---|
+| GET | `/api/subject?id=<id>` | Todo lo del titular: consentimientos, transferencias, datos en fuentes y auditoría. |
+| POST | `/api/subject/forget` `{id}` | **Derecho al olvido**: borra todos sus datos (la auditoría se conserva como evidencia). |
+| GET | `/api/ropa` | Registro de Actividades de Tratamiento. |
+| GET | `/api/health` | Estado. |
+
+⚠️ Superficie sensible: exponla **solo en red interna/VPN** y siempre con token. Cada acción queda auditada.
+
 ## Casos de uso
 
 Aplica a **cualquier sistema que trate datos personales** (RUT, nombre, teléfono, email, dirección…), tenga IA o no. Las finalidades del config son ejemplos multi-rubro (`asistencia_venta`, `soporte`, `agendamiento`, `cobranza`, `reclutamiento`, `verificacion_identidad`, `notificaciones`, `marketing`…): cámbialas por las tuyas.

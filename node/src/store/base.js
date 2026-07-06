@@ -9,6 +9,8 @@ class PrivacyStore {
   update(collection, query, patch) { throw new Error('PrivacyStore.update no implementado'); }
   appendLog(record) { throw new Error('PrivacyStore.appendLog no implementado'); } // bitácora append-only
   expired(collection, beforeIso) { throw new Error('PrivacyStore.expired no implementado'); }
+  // Opcional (para el panel admin): leer la bitácora. Default vacío para no romper stores existentes.
+  readLog(query = {}) { return []; }
 }
 
 // Implementación de prueba/prototipo. NO usar en producción.
@@ -28,6 +30,7 @@ class InMemoryStore extends PrivacyStore {
   update(c, q, p) { let n = 0; for (const r of this._db[c] || []) if (this._match(r, q)) { Object.assign(r, p); n++; } return n; }
   appendLog(r) { this._log.push(r); }
   expired(c, before) { return (this._db[c] || []).filter((r) => r.expiresAt && r.expiresAt < before); }
+  readLog(query = {}) { return this._log.filter((r) => this._match(r, query)); }
 }
 
 module.exports = { PrivacyStore, InMemoryStore };

@@ -47,6 +47,8 @@ DEFAULT_CONFIG: dict[str, Any] = {
         "openai": {"pais": "US", "rol": "encargado", "base": "interes_legitimo"},
         "pasarela_pago": {"pais": "CL", "rol": "encargado", "base": "contrato"},
     },
+    # Panel de administración opcional (módulo admin). Se levanta solo si enabled=True.
+    "admin_ui": {"enabled": False, "port": 8787, "token": ""},
     # Patrones PII para la capa de redacción (se pueden extender).
     "pii_patterns": {
         "rut": r"\b\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]\b",

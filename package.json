@@ -1,6 +1,6 @@
 {
   "name": "privacy-kit-cl",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Cumplimiento Ley 21.719 (Chile) para sistemas con IA — capa acoplable, multi-canal de mensajería (WhatsApp, SMS, Telegram, web chat, email). El código JavaScript vive en node/.",
   "license": "MIT",
   "author": "Diego Espinoza",

@@ -34,6 +34,8 @@ const DEFAULT_CONFIG = {
     openai: { pais: 'US', rol: 'encargado', base: 'interes_legitimo' },
     pasarela_pago: { pais: 'CL', rol: 'encargado', base: 'contrato' },
   },
+  // Panel de administración opcional (módulo admin). Se levanta solo si enabled=true.
+  adminUi: { enabled: false, port: 8787, token: '' },
   // Patrones PII para la capa de redacción (strings de RegExp).
   piiPatterns: {
     rut: '\\b\\d{1,2}\\.?\\d{3}\\.?\\d{3}-[\\dkK]\\b',
