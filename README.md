@@ -1,5 +1,15 @@
 # privacy-kit-cl 🛡️
 
+> Cumplimiento de la **Ley 21.719** (protección de datos, Chile) para sistemas con **IA/LLMs** — sin reescribir lo que ya funciona.
+
+![Python](https://img.shields.io/badge/python-3.10+-blue) ![License](https://img.shields.io/badge/license-MIT-green) ![status](https://img.shields.io/badge/status-alpha-orange)
+
+<p align="center">
+  <img src="docs/demo.gif" alt="La PII se enmascara antes de llegar al LLM y se rehidrata solo en la respuesta al cliente" width="760">
+</p>
+
+<p align="center"><i>La PII (RUT, teléfono) se enmascara <b>antes</b> de tocar el LLM, y se rehidrata solo en la respuesta al cliente.</i></p>
+
 Módulo **independiente y reutilizable** para cumplir la **Ley 21.719** (Protección de Datos Personales de Chile) en cualquier sistema que trate datos personales — especialmente sistemas con **IA/LLMs** que interactúan con terceros (clientes).
 
 La idea: en vez de reimplementar el cumplimiento en cada proyecto, se **acopla** este kit como una capa transversal. Un desarrollador (o una IA) instala el paquete, lo configura con un archivo declarativo, y envuelve los puntos donde entra/sale/procesa un dato personal.
@@ -15,6 +25,10 @@ La idea: en vez de reimplementar el cumplimiento en cada proyecto, se **acopla**
 | `transfers` | Transferencia a terceros | Registro de a qué terceros (OpenAI, Anthropic, pasarelas…) se envían datos. |
 | `audit` | Responsabilidad proactiva | Bitácora inmutable de cada acceso/tratamiento de dato personal. |
 | `notice` | Transparencia | Genera el aviso de privacidad y su entrega en el primer contacto. |
+
+## Cómo funciona
+
+<p align="center"><img src="docs/architecture.svg" width="840" alt="Flujo de cumplimiento privacy-kit"></p>
 
 ## Principios de diseño
 
